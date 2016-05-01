@@ -81,13 +81,3 @@ object EqFuture {
   }
 
 }
-
-object ScalaFutureConverter {
-
-  def asScalaFuture[A](fa: Future[A]): scala.concurrent.Future[A] = {
-    val scalaPromiseA = scala.concurrent.Promise[A]()
-    fa(a => scalaPromiseA.success(a), error => scalaPromiseA.failure(error))
-    scalaPromiseA.future
-  }
-
-}
