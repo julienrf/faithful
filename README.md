@@ -14,8 +14,8 @@ Key features:
 
 The following artifacts are published under the organization name `org.julienrf`:
 
-- [![Maven Central](https://img.shields.io/maven-central/v/org.julienrf/faithful_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.julienrf/faithful_2.11) `faithful`: provides the `Promise` and `Future` implementations. See [API doc](http://julienrf.github.io/faithful/api/0.1) ;
-- [![Maven Central](https://img.shields.io/maven-central/v/org.julienrf/faithful-cats_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/org.julienrf/faithful-cats_2.11) `faithful-cats`: provides instances of [Cats](http://github.com/typelevel/cats) typeclasses for `Future`. See [API doc](http://julienrf.github.io/faithful-cats/api/0.1)
+- [faithful](https://index.scala-lang.org/julienrf/faithful/faithful)
+- [faithful-cats](https://index.scala-lang.org/julienrf/faithful/faithful-cats)
 
 ## License
 

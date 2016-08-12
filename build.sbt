@@ -108,7 +108,6 @@ val `faithful-project` =
         commitReleaseVersion,
         tagRelease,
         publishArtifacts,
-        ReleaseStep(action = Command.process("publishDoc", _)),
         setNextVersion,
         commitNextVersion,
         ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
@@ -124,11 +123,4 @@ compileAllBenchmarks := {
   (fullOptJS in (`benchmark-futures`, Compile)).value
   (fullOptJS in (`benchmark-native`, Compile)).value
   ()
-}
-
-val publishDoc = taskKey[Unit]("Publish API documentation")
-
-publishDoc := {
-  IO.copyDirectory((doc in (faithful, Compile)).value, Path.userHome / "sites" / "julienrf.github.com" / "faithful" / version.value / "api")
-  IO.copyDirectory((doc in (`faithful-cats`, Compile)).value, Path.userHome / "sites" / "julienrf.github.com" / "faithful-cats" / version.value / "api")
 }
