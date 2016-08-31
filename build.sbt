@@ -17,6 +17,7 @@ scalacOptions in ThisBuild ++= Seq(
 )
 
 val publishSettings = Seq(
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   pomExtra :=
     <developers>
       <developer>
@@ -99,7 +100,6 @@ val `faithful-project` =
   project.in(file("."))
     .settings(
       publishArtifact := false,
-      releasePublishArtifactsAction := PgpKeys.publishSigned.value,
       releaseProcess := Seq[ReleaseStep](checkSnapshotDependencies,
         inquireVersions,
         runClean,
