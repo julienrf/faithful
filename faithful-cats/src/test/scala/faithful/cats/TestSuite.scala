@@ -5,11 +5,11 @@ import cats.data.{Xor, XorT}
 import faithful.{Future, Promise}
 import cats.laws.discipline.{CoflatMapTests, MonadErrorTests}
 import cats.laws.discipline.CartesianTests.Isomorphisms
-import cats.std.int.intAlgebra
-import cats.data.XorT.xorTEq
-import cats.data.Xor.xorEq
-import cats.std.option.eqOption
-import cats.laws.discipline.eq.unitEq
+import cats.instances.int._
+import cats.instances.unit._
+import cats.data.XorT.catsDataEqForXorT
+import cats.data.Xor.catsDataEqForXor
+import cats.instances.option.catsKernelStdEqForOption
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline
@@ -21,7 +21,7 @@ class TestSuite extends FunSuite with Discipline {
   import ArbitraryFuture._
   import EqFuture._
 
-  implicit val eqXorTFEA: Eq[XorT[Future, Throwable, Int]] = xorTEq[Future, Throwable, Int]
+  implicit val eqXorTFEA: Eq[XorT[Future, Throwable, Int]] = catsDataEqForXorT[Future, Throwable, Int]
   implicit val eqIntIntInt: Eq[(Int,Int,Int)] = new Eq[(Int, Int, Int)] {
     def eqv(l: (Int, Int, Int), r: (Int, Int, Int)) =
       Eq[Int].eqv(l._1, r._1) &&

@@ -52,8 +52,8 @@ val `faithful-cats` =
     .settings(publishSettings: _*)
     .settings(
       libraryDependencies ++= Seq(
-        "org.typelevel" %%% "cats" % "0.5.0",
-        "org.typelevel"  %%% "cats-laws" % "0.5.0" % Test,
+        "org.typelevel" %%% "cats" % "0.7.0",
+        "org.typelevel"  %%% "cats-laws" % "0.7.0" % Test,
         "org.typelevel" %%% "discipline" % "0.5" % Test,
         "org.scalatest" %%% "scalatest" % "3.0.0-M15" % Test
       )

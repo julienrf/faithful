@@ -53,7 +53,11 @@ object Instances {
         promiseA.future
       }
       def coflatMap[A, B](fa: Future[A])(f: Future[A] => B) = Future.successful(f(fa))
-
+      def tailRecM[A, B](a: A)(f: A => Future[Either[A, B]]): Future[B] =
+        flatMap(f(a)) {
+          case Left(b1) => tailRecM(b1)(f)
+          case Right(c) => Future.successful(c)
+        }
     }
 
 }
