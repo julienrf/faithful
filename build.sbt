@@ -1,6 +1,6 @@
 organization in ThisBuild := "org.julienrf"
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.1"
 
 scalacOptions in ThisBuild ++= Seq(
   "-feature",
@@ -53,17 +53,17 @@ val `faithful-cats` =
     .settings(publishSettings: _*)
     .settings(
       libraryDependencies ++= Seq(
-        "org.typelevel" %%% "cats" % "0.7.0",
-        "org.typelevel"  %%% "cats-laws" % "0.7.0" % Test,
-        "org.typelevel" %%% "discipline" % "0.5" % Test,
-        "org.scalatest" %%% "scalatest" % "3.0.0-M15" % Test
+        "org.typelevel" %%% "cats" % "0.8.1",
+        "org.typelevel"  %%% "cats-laws" % "0.8.1" % Test,
+        "org.typelevel" %%% "discipline" % "0.7.3" % Test,
+        "org.scalatest" %%% "scalatest" % "3.0.1" % Test
       )
     )
     .dependsOn(faithful)
 
 val benchmarkDeps = Def.setting {
   Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.0"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.1"
   )
 }
 
