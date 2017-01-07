@@ -1,17 +1,15 @@
 package faithful.cats
 
-import cats.Eq
+import cats.{ApplicativeError, Eq}
 import cats.data.EitherT
 import cats.data.EitherT.catsDataEqForEitherT
 import faithful.{Future, Promise}
-import cats.laws.discipline.{CoflatMapTests, MonadErrorTests}
+import cats.laws.discipline.{ApplicativeErrorTests, ApplicativeTests, MonadErrorTests}
 import cats.laws.discipline.CartesianTests.Isomorphisms
 import cats.instances.int._
-import cats.instances.unit._
 import cats.instances.option.catsKernelStdEqForOption
 import cats.instances.either.catsStdEqForEither
-import org.scalacheck.rng.Seed
-import org.scalacheck.{Arbitrary, Cogen, Gen}
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline
 
@@ -21,8 +19,6 @@ class TestSuite extends FunSuite with Discipline {
   import faithful.cats.Instances._
   import ArbitraryFuture._
   import EqFuture._
-  import Cogen._
-  import CogenFuture._
 
   implicit val eqEitherTFEA: Eq[EitherT[Future, Throwable, Int]] = catsDataEqForEitherT[Future, Throwable, Int]
   implicit val eqIntIntInt: Eq[(Int,Int,Int)] =
@@ -32,8 +28,9 @@ class TestSuite extends FunSuite with Discipline {
         Eq[Int].eqv(l._3, r._3)
   implicit val iso: Isomorphisms[Future] = Isomorphisms.invariant[Future]
 
-//  checkAll("Future[Int]", MonadErrorTests[Future, Throwable].monadError[Int, Int, Int])
-  checkAll("Future[Int]", CoflatMapTests[Future].coflatMap[Int, Int, Int])
+  checkAll("Future[Int]", ApplicativeTests[Future].applicative[Int, Int, Int])
+//  checkAll("Future[Int]", ApplicativeErrorTests[Future, Throwable].applicativeError[Int, Int, Int])
+//  checkAll("Future[Int]", MonadErrorTests[Future, Throwable].stackUnsafeMonad[Int, Int, Int])
 
 }
 
@@ -69,29 +66,7 @@ object EqFuture {
 
   implicit val eqThrowable: Eq[Throwable] = Eq.fromUniversalEquals
 
-  implicit def eqFuture[A](implicit eqA: Eq[Option[Either[Throwable, A]]]): Eq[Future[A]] = {
+  implicit def eqFuture[A](implicit eqA: Eq[Option[Either[Throwable, A]]]): Eq[Future[A]] =
+    (fa1: Future[A], fa2: Future[A]) => eqA.eqv(Future.completion(fa1), Future.completion(fa2))
 
-    def completion(fa: Future[A]): Option[Either[Throwable, A]] = {
-      var result: Option[Either[Throwable, A]] = None
-      fa(a => result = Some(Right(a)), error => result = Some(Left(error)))
-      result
-    }
-    new Eq[Future[A]] {
-      def eqv(fa1: Future[A], fa2: Future[A]) =
-        eqA.eqv(completion(fa1), completion(fa2))
-    }
-  }
-
-}
-
-object CogenFuture {
-
-  implicit def cogenFuture[A](implicit cogenA: Cogen[Option[Either[Throwable, A]]]): Cogen[Future[A]]= {
-    def completion(fa: Future[A]): Option[Either[Throwable, A]] = {
-      var result: Option[Either[Throwable, A]] = None
-      fa(a => result = Some(Right(a)), error => result = Some(Left(error)))
-      result
-    }
-    Cogen[Future[A]]( (seed: Seed, fa: Future[A]) => cogenA.perturb(seed, completion(fa)))
-  }
 }

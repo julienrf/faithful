@@ -79,4 +79,13 @@ object Future {
     */
   def failed(error: Throwable): Future[Nothing] = (onSuccess, onError) => onError(error)
 
+  /**
+    * @return The completion state of the given future (`None` if not yet completed)
+    */
+  def completion[A](fa: Future[A]): Option[Either[Throwable, A]] = {
+    var result: Option[Either[Throwable, A]] = None
+    fa(a => result = Some(Right(a)), error => result = Some(Left(error)))
+    result
+  }
+
 }

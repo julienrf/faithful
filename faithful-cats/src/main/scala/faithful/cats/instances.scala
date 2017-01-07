@@ -1,6 +1,6 @@
 package faithful.cats
 
-import cats.{CoflatMap, MonadError}
+import cats.MonadError
 import faithful.{Future, Promise}
 
 /**
@@ -25,34 +25,31 @@ import faithful.{Future, Promise}
   */
 object Instances {
 
-  /**
-    *
-    */
-  implicit val faithfulFutureMonadErrorWithCoflatMap: MonadError[Future, Throwable] with CoflatMap[Future] =
-    new MonadError[Future, Throwable] with CoflatMap[Future] {
-      def pure[A](a: A) = Future.successful(a)
-      def raiseError[A](e: Throwable) = Future.failed(e)
+  implicit val faithfulFutureMonadErrorWithCoflatMap: MonadError[Future, Throwable] =
+    new MonadError[Future, Throwable] {
+      def pure[A](a: A): Future[A] = Future.successful(a)
+      def raiseError[A](e: Throwable): Future[A] = Future.failed(e)
       override def map[A, B](fa: Future[A])(f: A => B) = {
         val promiseB = new Promise[B]()
         fa(a => promiseB.success(f(a)), promiseB.failure)
         promiseB.future
       }
-      def flatMap[A, B](fa: Future[A])(f: A => Future[B]) = {
+      def flatMap[A, B](fa: Future[A])(f: A => Future[B]): Future[B] = {
         val promiseB = new Promise[B]()
         fa(a => f(a)(promiseB.success, promiseB.failure), promiseB.failure)
         promiseB.future
       }
-      override def handleError[A](fa: Future[A])(f: Throwable => A) = {
+      override def handleError[A](fa: Future[A])(f: Throwable => A): Future[A] = {
         val promiseA = new Promise[A]()
         fa(promiseA.success, error => promiseA.success(f(error)))
         promiseA.future
       }
-      def handleErrorWith[A](fa: Future[A])(f: Throwable => Future[A]) = {
+      def handleErrorWith[A](fa: Future[A])(f: Throwable => Future[A]): Future[A] = {
         val promiseA = new Promise[A]()
         fa(promiseA.success, error => f(error)(promiseA.success, promiseA.failure))
         promiseA.future
       }
-      def coflatMap[A, B](fa: Future[A])(f: Future[A] => B) = Future.successful(f(fa))
+      // Note that this is *not* stack safe.
       def tailRecM[A, B](a: A)(f: A => Future[Either[A, B]]): Future[B] =
         flatMap(f(a)) {
           case Left(b1) => tailRecM(b1)(f)
