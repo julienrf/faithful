@@ -107,21 +107,21 @@ val `faithful-project` =
   project.in(file("."))
     .settings(noPublishSettings: _*)
     .settings(
-      releaseCrossBuild := true,
-      releaseProcess := Seq[ReleaseStep](checkSnapshotDependencies,
-        inquireVersions,
-        runClean,
-        releaseStepCommand("+faithful/test"),
-        releaseStepCommand("+faithful-cats/test"),
-        setReleaseVersion,
-        commitReleaseVersion,
-        tagRelease,
-        releaseStepCommand("+faithful/publishSigned"),
-        releaseStepCommand("+faithful-cats/publishSigned"),
-        setNextVersion,
-        commitNextVersion,
-        pushChanges
-      )
+//      releaseCrossBuild := true,
+//      releaseProcess := Seq[ReleaseStep](checkSnapshotDependencies,
+//        inquireVersions,
+//        runClean,
+//        releaseStepCommand("+faithful/test"),
+//        releaseStepCommand("+faithful-cats/test"),
+//        setReleaseVersion,
+//        commitReleaseVersion,
+//        tagRelease,
+//        releaseStepCommand("+faithful/publishSigned"),
+//        releaseStepCommand("+faithful-cats/publishSigned"),
+//        setNextVersion,
+//        commitNextVersion,
+//        pushChanges
+//      )
     )
     .aggregate(faithful, `faithful-cats`, `benchmark-faithful`, `benchmark-futures`, `benchmark-native`)
 
