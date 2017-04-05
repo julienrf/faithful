@@ -43,6 +43,12 @@ val publishSettings = Seq(
   )
 )
 
+val noPublishSettings = Seq(
+  publishArtifact := false,
+  publish := (),
+  publishLocal := ()
+)
+
 val faithful =
   project.in(file("faithful"))
     .enablePlugins(ScalaJSPlugin)
@@ -71,8 +77,8 @@ val benchmarkDeps = Def.setting {
 val `benchmark-faithful` =
   project.in(file("benchmarks/faithful"))
     .enablePlugins(ScalaJSPlugin)
+    .settings(noPublishSettings: _*)
     .settings(
-      publishArtifact := false,
       libraryDependencies ++= benchmarkDeps.value
     )
     .dependsOn(faithful)
@@ -80,8 +86,8 @@ val `benchmark-faithful` =
 val `benchmark-futures` =
   project.in(file("benchmarks/futures"))
     .enablePlugins(ScalaJSPlugin)
+    .settings(noPublishSettings: _*)
     .settings(
-      publishArtifact := false,
       libraryDependencies ++= benchmarkDeps.value
     )
     .dependsOn(faithful)
@@ -89,8 +95,8 @@ val `benchmark-futures` =
 val `benchmark-native` =
   project.in(file("benchmarks/native"))
     .enablePlugins(ScalaJSPlugin)
+    .settings(noPublishSettings: _*)
     .settings(
-      publishArtifact := false,
       libraryDependencies ++= benchmarkDeps.value
     )
     .dependsOn(faithful)
@@ -99,19 +105,21 @@ import ReleaseTransformations._
 
 val `faithful-project` =
   project.in(file("."))
+    .settings(noPublishSettings: _*)
     .settings(
-      publishArtifact := false,
+      releaseCrossBuild := true,
       releaseProcess := Seq[ReleaseStep](checkSnapshotDependencies,
         inquireVersions,
         runClean,
-        runTest,
+        releaseStepCommand("+faithful/test"),
+        releaseStepCommand("+faithful-cats/test"),
         setReleaseVersion,
         commitReleaseVersion,
         tagRelease,
-        publishArtifacts,
+        releaseStepCommand("+faithful/publishSigned"),
+        releaseStepCommand("+faithful-cats/publishSigned"),
         setNextVersion,
         commitNextVersion,
-        ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
         pushChanges
       )
     )
