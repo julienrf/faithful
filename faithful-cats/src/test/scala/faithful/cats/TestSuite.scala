@@ -7,8 +7,8 @@ import cats.instances.int._
 import cats.instances.option.catsKernelStdEqForOption
 import cats.instances.string._
 import cats.instances.unit._
-import cats.laws.discipline.CartesianTests.Isomorphisms
 import cats.laws.discipline.MonadErrorTests
+import cats.laws.discipline.SemigroupalTests.Isomorphisms
 import faithful.{Future, Promise}
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
@@ -65,7 +65,7 @@ object ArbitraryFuture {
 
 object EqFuture {
 
-  implicit val eqThrowable: Eq[Throwable] = Eq[String].on(_.toString)
+  implicit val eqThrowable: Eq[Throwable] = Eq.by[Throwable, String](_.toString)
 
   implicit def eqFuture[A](implicit eqA: Eq[Option[Either[Throwable, A]]]): Eq[Future[A]] =
     (fa1: Future[A], fa2: Future[A]) => eqA.eqv(Future.completion(fa1), Future.completion(fa2))

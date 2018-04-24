@@ -14,14 +14,14 @@ class AsyncTestSuite extends AsyncFunSuite {
     val y = x.future.map(_ + 1)
     x.success(42)
     val z = x.future.map(_ * 2)
-    val assertion = (y |@| z).map((xx, yy) => assert(xx == 43 && yy == 84))
+    val assertion = (y, z).mapN((xx, yy) => assert(xx == 43 && yy == 84))
     asScalaFuture(assertion)
   }
 
   test("no exception catching") {
     class MyException extends Exception
     val x = new Promise[Int]()
-    val y = x.future.map[Int](_ => throw new MyException)
+    x.future.map[Int](_ => throw new MyException)
     intercept[MyException] {
       x.success(42)
     }
