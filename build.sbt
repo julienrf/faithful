@@ -1,7 +1,7 @@
 organization in ThisBuild := "org.julienrf"
 
 scalaVersion in ThisBuild := "2.12.4"
-crossScalaVersions := Seq("2.11.11", "2.12.4")
+val crossScalaV = Seq("2.11.11", "2.12.4")
 
 scalacOptions in ThisBuild ++= Seq(
   "-feature",
@@ -53,12 +53,14 @@ val faithful =
   project.in(file("faithful"))
     .enablePlugins(ScalaJSPlugin)
     .settings(publishSettings: _*)
+    .settings(crossScalaVersions := crossScalaV)
 
 val `faithful-cats` =
   project.in(file("faithful-cats"))
     .enablePlugins(ScalaJSPlugin)
     .settings(publishSettings: _*)
     .settings(
+      crossScalaVersions := crossScalaV,
       libraryDependencies ++= Seq(
         "org.typelevel" %%% "cats-core" % "1.1.0",
         "org.typelevel"  %%% "cats-laws" % "1.1.0" % Test,
