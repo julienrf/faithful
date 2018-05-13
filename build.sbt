@@ -45,8 +45,8 @@ val publishSettings = Seq(
 
 val noPublishSettings = Seq(
   publishArtifact := false,
-  publish := (),
-  publishLocal := ()
+  publish := (()),
+  publishLocal := (())
 )
 
 val faithful =
