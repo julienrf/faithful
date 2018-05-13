@@ -18,6 +18,7 @@ scalacOptions in ThisBuild ++= Seq(
 )
 
 val publishSettings = Seq(
+  publishTo := sonatypePublishTo.value,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   pomExtra :=
     <developers>
