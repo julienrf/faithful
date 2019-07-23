@@ -1,7 +1,7 @@
 package faithful.cats
 
 import faithful.{Future, Promise}
-import org.scalatest.AsyncFunSuite
+import org.scalatest.funsuite.AsyncFunSuite
 import ScalaFutureConverter.asScalaFuture
 import Instances._
 import cats.MonadError

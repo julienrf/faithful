@@ -5,7 +5,7 @@ import org.scalajs.dom.document
 import scala.scalajs.js
 import scala.scalajs.js.|
 
-object Main extends js.JSApp {
+object Main {
 
   def sequence[A](eventuallyAs: Seq[js.Thenable[A]]): js.Thenable[Seq[A]] =
     eventuallyAs.foldRight[js.Thenable[List[A]]](js.Promise.resolve[List[A]](List.empty[A])) { (eventuallyA, eventuallyAs) =>
@@ -24,7 +24,7 @@ object Main extends js.JSApp {
     sequence((1 to 50000).map((i: Int) => js.Promise.resolve[Int](i)))
   }
 
-  def main() = {
+  def main(args: Array[String]): Unit = {
     val startTime = (new js.Date).getTime()
     sequenceBenchmark().`then`[Unit](_ => {
       val endTime = (new js.Date).getTime()

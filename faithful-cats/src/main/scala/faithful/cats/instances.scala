@@ -31,22 +31,22 @@ object Instances {
       def raiseError[A](e: Throwable): Future[A] = Future.failed(e)
       override def map[A, B](fa: Future[A])(f: A => B) = {
         val promiseB = new Promise[B]()
-        fa(a => promiseB.success(f(a)), promiseB.failure)
+        fa(a => promiseB.success(f(a)), e => promiseB.failure(e))
         promiseB.future
       }
       def flatMap[A, B](fa: Future[A])(f: A => Future[B]): Future[B] = {
         val promiseB = new Promise[B]()
-        fa(a => f(a)(promiseB.success, promiseB.failure), promiseB.failure)
+        fa(a => f(a)(b => promiseB.success(b), e => promiseB.failure(e)), e => promiseB.failure(e))
         promiseB.future
       }
       override def handleError[A](fa: Future[A])(f: Throwable => A): Future[A] = {
         val promiseA = new Promise[A]()
-        fa(promiseA.success, error => promiseA.success(f(error)))
+        fa(a => promiseA.success(a), error => promiseA.success(f(error)))
         promiseA.future
       }
       def handleErrorWith[A](fa: Future[A])(f: Throwable => Future[A]): Future[A] = {
         val promiseA = new Promise[A]()
-        fa(promiseA.success, error => f(error)(promiseA.success, promiseA.failure))
+        fa(a => promiseA.success(a), error => f(error)(a => promiseA.success(a), e => promiseA.failure(e)))
         promiseA.future
       }
       // Note that this is *not* stack safe.

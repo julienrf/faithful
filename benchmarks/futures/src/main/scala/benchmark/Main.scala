@@ -5,13 +5,13 @@ import scala.scalajs.js
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import org.scalajs.dom.document
 
-object Main extends js.JSApp {
+object Main {
 
   def sequenceBenchmark(): Future[_] = {
     Future.sequence((1 to 50000).map(Future.successful): Seq[Future[Int]])
   }
 
-  def main() = {
+  def main(args: Array[String]): Unit = {
 
     val startTime = (new js.Date).getTime()
     sequenceBenchmark().map(_ => {

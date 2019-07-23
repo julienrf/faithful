@@ -4,17 +4,17 @@ import scala.scalajs.js
 import faithful.{Future, Promise}
 import org.scalajs.dom.document
 
-object Main extends js.JSApp {
+object Main {
 
   def map[A, B](fa: Future[A])(f: A => B): Future[B] = {
     val promiseB = new Promise[B]()
-    fa(a => promiseB.success(f(a)), promiseB.failure)
+    fa(a => promiseB.success(f(a)), e => promiseB.failure(e))
     promiseB.future
   }
 
   def flatMap[A, B](fa: Future[A])(f: A => Future[B]): Future[B] = {
     val promiseB = new Promise[B]()
-    fa(a => f(a)(promiseB.success, promiseB.failure), promiseB.failure)
+    fa(a => f(a)(b => promiseB.success(b), e => promiseB.failure(e)), e => promiseB.failure(e))
     promiseB.future
   }
 
@@ -31,7 +31,7 @@ object Main extends js.JSApp {
     sequence((1 to 50000).map(Future.successful))
   }
 
-  def main() = {
+  def main(args: Array[String]): Unit = {
     val startTime = (new js.Date).getTime()
     map(sequenceBenchmark())(_ => {
       val endTime = (new js.Date).getTime()
