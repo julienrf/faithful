@@ -63,7 +63,7 @@ val `faithful-cats` =
         "org.typelevel" %%% "cats-core" % "2.1.1",
         "org.typelevel" %%% "cats-laws" % "2.1.1" % Test,
         "org.typelevel" %%% "discipline-scalatest" % "1.0.1" % Test,
-        "org.scalatest" %%% "scalatest" % "3.2.0-M4" % Test
+        "org.scalatest" %%% "scalatest" % "3.1.2" % Test
       )
     )
     .dependsOn(faithful)
