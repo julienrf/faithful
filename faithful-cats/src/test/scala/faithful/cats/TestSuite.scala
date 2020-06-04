@@ -12,10 +12,11 @@ import cats.laws.discipline.SemigroupalTests.Isomorphisms
 import faithful.{Future, Promise}
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.funsuite.AnyFunSuite
-import org.typelevel.discipline.scalatest.Discipline
+import org.scalatest.prop.Configuration
+import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
 // TODO Write tests that don’t need `Eq[Future[_]]` values
-class TestSuite extends AnyFunSuite with Discipline {
+class TestSuite extends AnyFunSuite with FunSuiteDiscipline with Configuration {
 
   import ArbitraryFuture._
   import EqFuture._
