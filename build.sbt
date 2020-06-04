@@ -1,7 +1,7 @@
 organization in ThisBuild := "org.julienrf"
 
 scalaVersion in ThisBuild := "2.13.2"
-val crossScalaV = Seq( "2.13.2", "2.12.12")
+val crossScalaV = Seq( "2.13.2", "2.12.11")
 
 scalacOptions in ThisBuild ++= Seq(
   "-feature",
